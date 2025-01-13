@@ -1,100 +1,95 @@
-# Validacao Facial com OpenCV e DNN
+# Detecção e Análise Facial com OpenCV
 
-Este projeto implementa a detecção de rostos, além da análise de possiçoes utilizando redes neurais profundas (DNN) e a biblioteca OpenCV.
-A aplicação usa um modelo pré-treinado para detecção facial e outro para detectar pontos de referência faciais.
-O código também calcula a relação da abertura dos olhos (EAR) e da boca (MAR), proporcionando informações sobre o estado do rosto para validacoes como as ultilizadas para reconhecimento facial".
+## Visão Geral
+Este projeto utiliza a biblioteca OpenCV para realizar detecção e análise facial em vídeos ou imagens estáticas. Ele utiliza uma rede neural convolucional para detectar rostos e landmarks faciais e realiza cálculos de Aspect Ratio (AR) para identificar estados faciais como "Olhos Fechados" ou "Boca Aberta".
 
-## Funcionalidades
+## Funcionalidades Principais
 
-- **Detecção de Rostos**: Utiliza um modelo DNN pré-treinado para detectar rostos em imagens ou vídeos.
-- **Pontos de Referência Faciais**: Detecta e mapeia os pontos de referência faciais para detectar espresoes faciais.
-- **Cálculo de EAR (Eye Aspect Ratio)**: Avalia a abertura dos olhos para determinar se a pessoa está com os olhos fechados ou abertos.
-- **Cálculo de MAR (Mouth Aspect Ratio)**: Avalia a abertura da boca para determinar se está aberta ou fechada.
-- **Exibição de Resultados**: Exibe em tempo real no vídeo a detecção do rosto e indicadores de status para a validacoes das possicoes dos olhos e da boca.
+1. **Detecção de Faces:**
+   - Utiliza um modelo de rede neural (DNN) treinado para identificar rostos em um frame.
+   - A detecção é baseada em um modelo Caffe com configurações e pesos pré-treinados.
 
-## Requisitos
+2. **Identificação de Landmarks Faciais:**
+   - Após a detecção do rosto, landmarks faciais são identificados usando o modelo LBF (Local Binary Features).
 
-- OpenCV 4.x
-- Modelo Caffe para detecção facial
-- Modelo LBF para pontos de referência faciais
-- Vídeo ou imagem de entrada
+3. **Cálculo de Aspect Ratio (AR):**
+   - **EAR (Eye Aspect Ratio):** Mede a abertura dos olhos para determinar se estão abertos ou fechados.
+   - **MAR (Mouth Aspect Ratio):** Mede a abertura da boca para determinar se está aberta ou fechada.
+
+4. **Visualização:**
+   - Desenha retângulos ao redor dos rostos detectados.
+   - Marcações dos landmarks faciais.
+   - Exibe textos indicando o estado dos olhos e da boca.
 
 ## Estrutura do Código
 
-### 1. **DNNNetSingleton**
-   - A classe `DNNNetSingleton` é um singleton para garantir que a rede neural (Net) seja carregada uma única vez. Ela utiliza os arquivos de configuração e pesos para inicializar a rede.
+### 1. **Classe `FrameProcesser`**
+Responsável por processar cada frame da imagem ou vídeo.
 
-### 2. **Funções de Cálculo**
-   - **`calculateAspectRatio`**: Funçao generica ultilizada para a implementacao dos calculos de *Aspect Ratio* que podem ser implementadas posteriormente.
-   - **`eyes`**: Calcula o **Eye Aspect Ratio (EAR)** para medir a abertura dos olhos com base nos pontos de referência faciais.
-   - **`mouth`**: Calcula o **Mouth Aspect Ratio (MAR)** para medir a abertura da boca com base nos pontos de referência faciais.
+- **Função `processFrame`:**
+  - Reduz a resolução do frame para otimizar o processamento.
+  - Converte o frame para escala de cinza e equaliza o histograma para melhorar a detecção.
+  - Detecta rostos usando o modelo DNN.
+  - Ajusta os landmarks faciais e calcula EAR e MAR.
+  - Exibe o frame com as anotações visuais.
 
-### 3. **Detecção de Rostos com DNN**
-   - **`detectFace`**: Utiliza o modelo DNN carregado para detectar rostos na imagem ou vídeo. A detecção é feita em duas etapas: pré-processamento da imagem e execução da rede neural para identificar as regiões que correspondem a rostos.
+### 2. **Classe `CalculateDNN`**
+Gerencia o modelo de rede neural para detecção facial.
 
-### 4. **Processamento de Frames**
-   - **`processFrame`**: A função principal para processar cada frame de vídeo. Realiza:
-     - Redimensionamento do frame para diminuir a resolução.
-     - Conversão para escala de cinza e equalização do histograma.
-     - Detecção de rostos.
-     - Detecção e exibição de pontos de referência faciais.
-     - Cálculo e exibição do EAR e MAR.
-     - Exibição de mensagens indicativas do estado dos olhos e boca (abertos ou fechados).
+- **Funções Principais:**
+  - `getInstance`: Retorna a instância Singleton da rede neural.
+  - `detectFace`: Detecta rostos no frame usando o modelo DNN.
 
-### 5. **Função Principal (main)**
-   - A função principal (`main`) abre o vídeo ou a imagem fornecida, inicializa a rede DNN e o modelo de pontos de referência faciais, e processa os frames em tempo real. Ela também exibe a imagem com os resultados da análise.
+### 3. **Classe `CalculateAR`**
+Realiza os cálculos de Aspect Ratio para olhos e boca.
 
-## Como Usar
+- **Funções Principais:**
+  - `calculateAspectRatio`: Cálculo genérico do Aspect Ratio.
+  - `eyes`: Cálculo do EAR.
+  - `mouth`: Cálculo do MAR.
 
-1. **Instalar as dependências**: Certifique-se de que você tenha o OpenCV instalado no seu ambiente. Você pode instalar usando o comando:
+### 4. **Funções Auxiliares**
+- **`drawPolyline` e `drawLandmarks`:** Desenham os landmarks faciais no frame.
 
+### 5. **Função `main`**
+Carrega o vídeo ou imagem, inicializa os componentes necessários e processa cada frame.
+
+- **Fluxo Principal:**
+  - Carrega o arquivo de entrada (vídeo ou imagem).
+  - Inicializa o modelo DNN e o modelo de facemark.
+  - Processa cada frame, chamando `processFrame`.
+  - Exibe os resultados e aguarda uma tecla para sair.
+
+## Como Executar
+
+### Pré-requisitos
+- OpenCV instalado com suporte para DNN e facemark.
+- Arquivos de modelo para detecção facial (`deploy.prototxt` e `res10_300x300_ssd_iter_140000_fp16.caffemodel`).
+- Modelo LBF para landmarks (`lbfmodel.yaml`).
+
+### Comandos
+1. Compile o código:
    ```bash
-   pip install opencv-python opencv-contrib-python
+   g++ -o facial_analysis main.cpp -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_dnn -lopencv_face
    ```
 
-2. **Modelos Necessários**:
-   - Baixe os arquivos de configuração e pesos para a detecção facial:
-     - `deploy.prototxt`: Arquivo de configuração da rede.
-     - `res10_300x300_ssd_iter_140000_fp16.caffemodel`: Arquivo de pesos do modelo.
-   - Baixe o modelo LBF para a detecção de pontos de referência faciais:
-     - `lbfmodel.yaml`
-
-3. **Configuração de Arquivos**:
-   - Defina os caminhos corretos para os arquivos de configuração e modelos no código, caso os arquivos estejam em diretórios diferentes.
-
-4. **Executar o Programa**:
-   - Você pode usar um arquivo de vídeo ou uma imagem como entrada. O código é configurado para aceitar um vídeo pelo caminho `./New folder/video_calibracao.mp4`, mas você pode alterar para outro arquivo de sua escolha.
-   - Para rodar o programa, execute o código:
-
+2. Execute o programa:
    ```bash
-   g++ -o face_analysis face_analysis.cpp -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_dnn -lopencv_objdetect -lopencv_face
-   ./face_analysis
+   ./facial_analysis
    ```
 
-## Detalhamento das Funções e Métodos
+## Personalização
 
-### `DNNNetSingleton::getInstance`
-Retorna uma referência para a rede DNN. Se a rede ainda não estiver carregada, ela será carregada da primeira vez que o método for chamado.
+- **Parâmetros Threshold:** Os valores de EAR e MAR podem ser ajustados na classe `FrameProcesser` para alterar os critérios de detecção de olhos fechados e boca aberta.
+- **Modelos Customizados:** Pode-se substituir os modelos de DNN e LBF por outros, conforme necessário.
 
-### `calculateEAR`
-Calcula a **Eye Aspect Ratio** (EAR), que é usada para determinar se os olhos estão abertos ou fechados. A fórmula baseia-se na distância vertical entre os pontos do olho e na distância horizontal.
+## Possíveis Melhorias
 
-### `calculateMAR`
-Calcula a **Mouth Aspect Ratio** (MAR), que é usada para determinar se a boca está aberta ou fechada. A fórmula baseia-se nas distâncias verticais e horizontais entre os pontos da boca.
-
-### `detectFaceOpenCVDNN`
-Utiliza o modelo DNN para detectar rostos na imagem ou vídeo. A função retorna um vetor de retângulos delimitadores para os rostos encontrados.
-
-### `processFrame`
-Processa cada frame de vídeo:
-- Detecta rostos.
-- Detecta pontos de referência faciais.
-- Calcula o EAR e MAR.
-- Exibe informações sobre o estado dos olhos e boca.
-
-### `main`
-A função principal que executa o código, processando vídeo ou imagem e exibindo os resultados em tempo real.
+1. **Melhor Gerenciamento de Erros:** Adicionar tratamento de exceções para falhas no carregamento de arquivos ou na execução de funções.
+2. **Interface Gráfica Mais Rica:** Incluir gráficos ou outros elementos visuais para uma melhor representação dos resultados.
+3. **Otimização de Performance:** Implementar técnicas de paralelização ou processamento em lote para melhorar o desempenho.
+4. **Configuração Externa:** Permitir configuração dos parâmetros através de arquivos ou argumentos de linha de comando.
 
 ## Conclusão
+Este projeto demonstra o uso de OpenCV para detecção e análise facial em tempo real. Com algumas melhorias e personalizações, ele pode ser expandido para aplicações em monitoramento de fadiga, segurança, ou interações baseadas em expressões faciais.
 
-Este projeto oferece uma solução simples para análise facial em tempo real usando OpenCV e DNN, com o cálculo da abertura dos olhos e da boca. Ele pode ser facilmente modificado para incluir outras análises faciais ou aprimorar o desempenho.
