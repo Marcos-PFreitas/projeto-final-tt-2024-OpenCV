@@ -1,7 +1,7 @@
 # Detecção e Análise Facial com OpenCV
 
 ## Visão Geral
-Este projeto utiliza a biblioteca OpenCV para realizar detecção e análise facial em vídeos ou imagens estáticas. Ele utiliza uma rede neural convolucional para detectar rostos e landmarks faciais e realiza cálculos de Aspect Ratio (AR) para identificar estados faciais como "Olhos Fechados" ou "Boca Aberta".
+Este projeto utiliza a biblioteca OpenCV para realizar detecção e análise facial em vídeos ou imagens estáticas. Ele utiliza uma rede neural convolucional para detectar rostos e landmarks faciais. O projeto tem como ideia a validacao de possicao facial como a ultilizada para sistemas de reconhecimento facil. Realizando cálculos de Aspect Ratio (proporção de aspecto) para identificar estados faciais.
 
 ## Funcionalidades Principais
 
