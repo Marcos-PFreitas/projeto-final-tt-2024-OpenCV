@@ -23,6 +23,8 @@ Este projeto utiliza a biblioteca OpenCV para realizar detecção e análise fac
 
 ## Estrutura do Código
 
+![Diagrama de Classes] (Diagrama.png)
+
 ### 1. **Classe `FrameProcesser`**
 Responsável por processar cada frame da imagem ou vídeo.
 
