@@ -131,10 +131,10 @@ Ultilize o comando:
 
 ## Possíveis Melhorias
 
-1. **Melhor Gerenciamento de Erros:** Adicionar tratamento de exceções para falhas no carregamento de arquivos ou na execução de funções.
-2. **Interface Gráfica Mais Rica:** Incluir gráficos ou outros elementos visuais para uma melhor representação dos resultados.
+1. **Instauracao de Mais Cálculos para Validação do Rosto:** Adicionar algoritmos que realizem cálculos adicionais para validar a precisão dos marcos faciais, como medidas de simetria e proporções faciais.
+2. **Polimento da Identificação do Rosto e dos Landmarks Faciais:** Refinar os algoritmos de detecção para melhorar a precisão e robustez na identificação de rostos e na marcação de pontos faciais.
 3. **Otimização de Performance:** Implementar técnicas de paralelização ou processamento em lote para melhorar o desempenho.
-4. **Configuração Externa:** Permitir configuração dos parâmetros através de arquivos ou argumentos de linha de comando.
+4. **Implementação de Face Swap:** Adicionar funcionalidade para realizar troca de rostos em imagens, garantindo alinhamento preciso e mistura realista das características faciais.
 
 ## Conclusão
 Este projeto demonstra o uso de OpenCV para detecção e análise facial em tempo real. Com algumas melhorias e personalizações, ele pode ser expandido para aplicações em monitoramento de fadiga, segurança, ou interações baseadas em expressões faciais.
